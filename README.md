@@ -33,3 +33,17 @@ python3 main.py
 - `BEGIN` - starts a transaction.
 - `ROLLBACK` - rolls back the current (innermost) transaction.
 - `COMMIT` - commits the changes of the current (innermost) transaction.
+
+## Launching tests
+
+1. Install test requirements:
+
+```bash
+pip install -r requirements.test.txt
+```
+
+2. Run tests:
+
+```bash
+pytest tests/ -v
+```
