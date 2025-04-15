@@ -50,9 +50,7 @@ class Database:
             return
 
         if old_value is not None:
-            self.__value_counts[old_value] -= 1
-            if self.__value_counts[old_value] == 0:
-                del self.__value_counts[old_value]
+            self._decrement_value_count(old_value)
 
         source[key] = value
         self.__value_counts[value] += 1
@@ -72,6 +70,18 @@ class Database:
             if key in transaction:
                 return transaction[key] if transaction[key] is not None else None
         return self.__main_data.get(key)
+    
+    def _decrement_value_count(self, value: str) -> None:
+        """Уменьшает значение счетчика
+        
+        Если количество значения равно 0, удаляет его из счетчика
+        
+        Аргументы:
+            value (str): Значение для поиска.
+        """
+        self.__value_counts[value] -= 1
+        if self.__value_counts[value] == 0:
+            del self.__value_counts[value]
 
     def unset(self, key: str) -> None:
         """Удаляет ключ из базы данных.
@@ -88,16 +98,12 @@ class Database:
             old_value = self.get(key)
             current[key] = None
             if old_value is not None:
-                self.__value_counts[old_value] -= 1
-                if self.__value_counts[old_value] == 0:
-                    del self.__value_counts[old_value]
+                self._decrement_value_count(old_value)
         else:
             old_value = self.__main_data.get(key)
             if old_value is not None:
                 del self.__main_data[key]
-                self.__value_counts[old_value] -= 1
-                if self.__value_counts[old_value] == 0:
-                    del self.__value_counts[old_value]
+                self._decrement_value_count(old_value)
 
     def counts(self, value: str) -> int:
         """Возвращает количество ключей с указанным значением.
@@ -184,9 +190,7 @@ class Database:
             if value is None:
                 old_value = target.get(key)
                 if old_value is not None:
-                    self.__value_counts[old_value] -= 1
-                    if self.__value_counts[old_value] == 0:
-                        del self.__value_counts[old_value]
+                    self._decrement_value_count(old_value)
                     del target[key]
             else:
                 old_value = target.get(key)
@@ -194,9 +198,7 @@ class Database:
                     continue
 
                 if old_value is not None:
-                    self.__value_counts[old_value] -= 1
-                    if self.__value_counts[old_value] == 0:
-                        del self.__value_counts[old_value]
+                    self._decrement_value_count(old_value)
 
                 target[key] = value
                 self.__value_counts[value] += 1
