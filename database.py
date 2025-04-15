@@ -156,13 +156,9 @@ class Database:
                 if self.__value_counts[value] == 0:
                     del self.__value_counts[value]
 
-                restored_value = self.get(key)
-                if restored_value is not None:
-                    self.__value_counts[restored_value] += 1
-            else:
-                restored_value = self.get(key)
-                if restored_value is not None:
-                    self.__value_counts[restored_value] += 1
+            restored_value = self.get(key)
+            if restored_value is not None:
+                self.__value_counts[restored_value] += 1
         return True
 
     def commit(self) -> bool:
