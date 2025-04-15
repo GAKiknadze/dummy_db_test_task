@@ -9,7 +9,7 @@ The test task "Interactive console application resembling a database interface" 
 
 ## Launching the app
 
-1. Make sure you have **Python 3.10+** installed.
+1. Make sure you have **Python 3.8+** installed.
 2. Run in the terminal:
 
 ```bash
