@@ -9,12 +9,14 @@ def db():
 
 
 def test_set_get_outside_transaction(db):
+    """Проверка базовой установки и получения значения вне транзакции."""
     db.set("a", "foo")
     assert db.get("a") == "foo"
     assert db._Database__main_data["a"] == "foo"
 
 
 def test_set_in_transaction(db):
+    """Проверка установки значения внутри транзакции с последующим коммитом."""
     db.begin()
     db.set("a", "foo")
     assert db.get("a") == "foo"
@@ -24,6 +26,7 @@ def test_set_in_transaction(db):
 
 
 def test_unset_outside_transaction(db):
+    """Проверка удаления ключа вне транзакции."""
     db.set("a", "foo")
     db.unset("a")
     assert db.get("a") is None
@@ -31,6 +34,7 @@ def test_unset_outside_transaction(db):
 
 
 def test_unset_in_transaction(db):
+    """Проверка временного удаления ключа в транзакции."""
     db.set("a", "foo")
     db.begin()
     db.unset("a")
@@ -40,6 +44,7 @@ def test_unset_in_transaction(db):
 
 
 def test_counts_basic(db):
+    """Проверка подсчета значений с обновлением счетчиков при изменениях."""
     db.set("a", "foo")
     db.set("b", "foo")
     assert db.counts("foo") == 2
@@ -48,6 +53,7 @@ def test_counts_basic(db):
 
 
 def test_find_sorted_results(db):
+    """Проверка получения ключей в лексикографическом порядке."""
     db.set("c", "foo")
     db.set("a", "foo")
     db.set("b", "foo")
@@ -55,6 +61,7 @@ def test_find_sorted_results(db):
 
 
 def test_transaction_rollback(db):
+    """Проверка отката транзакции."""
     db.begin()
     db.set("a", "foo")
     db.rollback()
@@ -62,6 +69,7 @@ def test_transaction_rollback(db):
 
 
 def test_nested_transactions(db):
+    """Проверка вложенных транзакций с каскадным коммитом."""
     db.begin()
     db.set("a", "foo")
     db.begin()
@@ -73,14 +81,17 @@ def test_nested_transactions(db):
 
 
 def test_commit_empty_transaction(db):
+    """Проверка попытки коммита без активной транзакции."""
     assert not db.commit()
 
 
 def test_rollback_empty_transaction(db):
+    """Проверка попытки отката без активной транзакции."""
     assert not db.rollback()
 
 
 def test_value_counts_multiple_transactions(db):
+    """Проверка корректности счетчиков при откате транзакции."""
     db.set("a", "foo")
     db.begin()
     db.set("a", "bar")
@@ -93,6 +104,7 @@ def test_value_counts_multiple_transactions(db):
 
 
 def test_find_with_transaction_unset(db):
+    """Проверка поиска с временным удалением в транзакции."""
     db.set("a", "foo")
     db.begin()
     db.unset("a")
@@ -103,6 +115,7 @@ def test_find_with_transaction_unset(db):
 
 
 def test_commit_chain(db):
+    """Проверка цепочки вложенных транзакций с каскадным коммитом."""
     db.begin()
     db.set("a", "foo")
     db.begin()
@@ -113,6 +126,7 @@ def test_commit_chain(db):
 
 
 def test_overwrite_value_in_transaction(db):
+    """Проверка перезаписи значения и отката счетчиков."""
     db.set("a", "foo")
     db.begin()
     db.set("a", "bar")
@@ -123,15 +137,18 @@ def test_overwrite_value_in_transaction(db):
 
 
 def test_unset_non_existing_key(db):
+    """Проверка удаления несуществующего ключа."""
     db.unset("a")
     assert db.get("a") is None
 
 
 def test_find_non_existing_value(db):
+    """Проверка поиска несуществующего значения."""
     assert db.find("foo") is None
 
 
 def test_multiple_operations_in_transaction(db):
+    """Проверка комплексных операций в транзакции."""
     db.begin()
     db.set("a", "foo")
     db.set("b", "bar")
