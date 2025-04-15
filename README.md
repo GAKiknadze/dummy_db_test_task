@@ -1,5 +1,7 @@
 # dummy_db_test_task
 
+![Tests](https://github.com/GAKiknadze/dummy_db_test_task/actions/workflows/python-package.yml/badge.svg)
+
 The test task "Interactive console application resembling a database interface" from [DrWeb](https://drweb.com)
 
 ### Task condition:
