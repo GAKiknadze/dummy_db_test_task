@@ -43,6 +43,22 @@ def test_unset_in_transaction(db):
     assert db.get("a") is None
 
 
+def test_unset_in_sub_transaction(db):
+    """Проверка удаления ключа внутри вложенной транзакции"""
+    db.set("a", "foo")
+    db.begin()
+    assert db.get("a") == "foo"
+    db.set("a", "bar")
+    db.begin()
+    assert db.get("a") == "bar"
+    db.unset("a")
+    assert db.get("a") is None
+    db.commit()
+    assert db.get("a") is None
+    db.commit()
+    assert db.get("a") is None
+
+
 def test_counts_basic(db):
     """Проверка подсчета значений с обновлением счетчиков при изменениях."""
     db.set("a", "foo")
