@@ -191,7 +191,10 @@ class Database:
                 old_value = target.get(key)
                 if old_value is not None:
                     self._decrement_value_count(old_value)
-                    del target[key]
+                if target is self.__main_data:
+                    target.pop(key, None)
+                else:
+                    target[key] = None
             else:
                 old_value = target.get(key)
                 if old_value == value:
@@ -202,8 +205,5 @@ class Database:
 
                 target[key] = value
                 self.__value_counts[value] += 1
-
-        if self.__transaction_stack:
-            self.__transaction_stack[-1].update(target)
 
         return True
